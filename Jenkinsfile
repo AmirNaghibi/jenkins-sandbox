@@ -1,3 +1,7 @@
+#!groovy
+
+String[] projects = ["mcr1", "mcr2", "mcr3"];
+
 pipeline {
   agent any
   tools {
@@ -8,11 +12,13 @@ pipeline {
     stage('Build') {
       
       steps {
-        echo 'Building..'
+        script {
+            for(String project : projects) {
+                echo "Building ${project}..."
 
-        sh 'mvn -f mcr1/pom.xml clean package'
-
-
+                sh "mvn -f ${project}/pom.xml clean package"
+            }
+        }
       }
     }
     stage('Test') {

@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Mcr1Application {
+public class Mcr3Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Mcr1Application.class, args);
+		SpringApplication.run(Mcr3Application.class, args);
 	}
 }

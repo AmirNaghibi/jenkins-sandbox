@@ -1,4 +1,4 @@
-package org.nowherehub.mcr3;
+package org.nowherehub.mcr2;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Mcr1ApplicationTests {
+public class Mcr2ApplicationTests {
 
 	@Test
 	public void contextLoads() {
