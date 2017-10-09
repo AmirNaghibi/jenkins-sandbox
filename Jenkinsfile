@@ -75,4 +75,10 @@ pipeline {
       }
     }
   }
+  post {
+      always {
+          echo 'Clean Up'
+          deleteDir() /* clean up our workspace */
+      }
+  }
 }
