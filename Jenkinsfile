@@ -1,4 +1,4 @@
-#!groovy
+#!/usr/bin/env groovy
 
 String[] projects = ["mcr1", "mcr2", "mcr3"];
 
@@ -46,11 +46,11 @@ pipeline {
       steps {
         script {
             if( projectsToBuild.isEmpty() ) {
-                 echo "Nothing to Build..."
+                 echo "\u2600 Nothing to Build... \u2600"
             }
 
             for(String project : projectsToBuild) {
-                echo "Building ${project}..."
+                echo "\u2600 Building ${project}... \u2600"
 
                 sh "mvn -f ${project}/pom.xml -DskipTests=true clean package"
             }
