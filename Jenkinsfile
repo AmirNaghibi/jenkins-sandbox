@@ -15,6 +15,11 @@ pipeline {
       
       steps {
         script {
+            withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                // fetch all tags
+                sh("git fetch --tags || true")
+            }
+
             def rootCommit = sh "git rev-list --max-parents=0 HEAD"
 
             for(String project : projects) {
@@ -22,8 +27,9 @@ pipeline {
                 def lastTag = sh(script:"git show-ref --hash --abbrev=7 refs/tags/lastbuild_${project} || echo ${rootCommit}", returnStdout: true).trim()
 
                 // find current branch commitid
-                def currentCommitId = sh(script:"git rev-parse --verify ${env.BRANCH_NAME}", returnStdout: true)
+                def currentCommitId = sh(script:"git rev-parse HEAD", returnStdout: true).trim()
                 echo "currentCommitId = ${currentCommitId}"
+                
                 // find diff between current branch env.BRANCH_NAME and last build
                 echo "Running git diff-tree --name-only ${currentCommitId}..${lastTag}  -- ${project}"
                 def diff = sh(script:"git diff-tree --name-only ${currentCommitId}..${lastTag}  -- ${project}", returnStdout: true).trim()
