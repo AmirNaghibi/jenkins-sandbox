@@ -45,6 +45,10 @@ pipeline {
 
       steps {
         script {
+            if( projectsToBuild.isEmpty() ) {
+                 echo "Nothing to Build..."
+            }
+
             for(String project : projectsToBuild) {
                 echo "Building ${project}..."
 
