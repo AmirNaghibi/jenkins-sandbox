@@ -2,6 +2,8 @@
 
 String[] projects = ["mcr1", "mcr2", "mcr3"];
 
+def projectsToBuild = []
+
 pipeline {
   agent any
   tools {
@@ -9,7 +11,7 @@ pipeline {
     jdk 'jdk8'
   }
   stages {
-    stage('Build') {
+    stage('Diff') {
       
       steps {
         script {
@@ -18,7 +20,27 @@ pipeline {
             for(String project : projects) {
                 // find last tag
                 def lastTag = sh(script:"git show-ref --hash --abbrev=7 refs/tags/lastbuild_${project} || echo ${rootCommit}", returnStdout: true).trim()
-                echo "Building ${project} with last tag ${lastTag}..."
+
+                // find current branch commitid
+                def currentCommitId = sh(script:"git rev-parse --verify ${env.BRANCH_NAME}", returnStdout: true)
+                echo "currentCommitId = ${currentCommitId}"
+                // find diff between current branch env.BRANCH_NAME and last build
+                echo "Running git diff-tree --name-only ${currentCommitId}..${lastTag}  -- ${project}"
+                def diff = sh(script:"git diff-tree --name-only ${currentCommitId}..${lastTag}  -- ${project}", returnStdout: true).trim()
+
+                if (diff != "") {
+                    projectsToBuild << project
+                }
+            }
+        }
+      }
+    }
+    stage('Build') {
+
+      steps {
+        script {
+            for(String project : projectsToBuild) {
+                echo "Building ${project}..."
 
                 sh "mvn -f ${project}/pom.xml -DskipTests=true clean package"
             }
@@ -28,7 +50,7 @@ pipeline {
     stage('Tagging') {
       steps {
         script {
-            for(String project : projects) {
+            for(String project : projectsToBuild) {
                 echo 'Tagging ${project}...'
 
                 sh "git config user.email developer@nowherehub.org"
