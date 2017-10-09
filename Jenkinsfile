@@ -13,8 +13,12 @@ pipeline {
       
       steps {
         script {
+            def rootCommit = sh "git rev-list --max-parents=0 HEAD"
+
             for(String project : projects) {
-                echo "Building ${project}..."
+                // find last tag
+                def lastTag = sh(script:"git show-ref --hash --abbrev=7 refs/tags/lastbuild_${project} || echo ${rootCommit}", returnStdout: true).trim()
+                echo "Building ${project} with last tag ${lastTag}..."
 
                 sh "mvn -f ${project}/pom.xml -DskipTests=true clean package"
             }
