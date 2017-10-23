@@ -25,3 +25,15 @@ calculate the changeset with the previous successful build.
 for each project
 
 `mvn clean package docker:build` 
+
+# Traefik
+All microservices mcr* are behind a reverse proxy called [Traefik](https://docs.traefik.io/).
+
+Start the compose file:
+
+`docker-scripts/docker-compose up`
+
+Test it :
+- [http://localhost:80/mcr1/health](http://localhost:80/mcr1/health)
+- [http://localhost:80/mcr2/health](http://localhost:80/mcr2/health)
+- [http://localhost:80/mcr3/health](http://localhost:80/mcr3/health)

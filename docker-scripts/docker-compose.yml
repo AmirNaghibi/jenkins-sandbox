@@ -8,6 +8,10 @@ services:
     - "8010:8080/tcp"
     networks:
     - frontend
+    labels:
+    - "traefik.backend=mcr1"
+    - "traefik.frontend.rule=PathPrefixStrip: /mcr1"
+    - "traefik.docker.network: frontend"
 
   mcr2:
     image: nowheresly/mcr2:latest
@@ -16,12 +20,35 @@ services:
     - "8020:8080/tcp"
     networks:
     - frontend
+    labels:
+    - "traefik.backend=mcr2"
+    - "traefik.frontend.rule=PathPrefixStrip: /mcr2"
+    - "traefik.docker.network: frontend"
 
   mcr3:
     image: nowheresly/mcr3:latest
     hostname: 'mcr3'
     ports:
     - "8030:8080/tcp"
+    networks:
+    - frontend
+    labels:
+    - "traefik.backend=mcr3"
+    - "traefik.frontend.rule=PathPrefixStrip: /mcr3"
+    - "traefik.docker.network: frontend"
+
+  traefik:
+    image: traefik
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    hostname: traefik
+    ports:
+    - "8080:8080/tcp"
+    - "80:80/tcp"
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /dev/null:/traefik.toml
+    labels:
+    - "traefik.enable=false"
     networks:
     - frontend
 
