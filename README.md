@@ -17,4 +17,11 @@ When a given microservice is updated, this Jenkinsfile will perform a diff to id
 which microservice is impacted by the changeset and will trigger only the build for those microservices.
 
 At the end of the build, a dedicated tag (`lastbuild_<branchname>`) is pushed to the repository so that it would be possible to
-calculate the changeset with the previous successful build. 
+calculate the changeset with the previous successful build.
+
+
+# Docker
+## How to build docker images
+for each project
+
+`mvn clean package docker:build` 

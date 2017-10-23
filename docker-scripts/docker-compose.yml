@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  mcr1:
+    image: nowheresly/mcr1:latest
+    hostname: 'mcr1'
+    ports:
+    - "8010:8080/tcp"
+    networks:
+    - frontend
+
+  mcr2:
+    image: nowheresly/mcr2:latest
+    hostname: 'mcr2'
+    ports:
+    - "8020:8080/tcp"
+    networks:
+    - frontend
+
+  mcr3:
+    image: nowheresly/mcr3:latest
+    hostname: 'mcr3'
+    ports:
+    - "8030:8080/tcp"
+    networks:
+    - frontend
+
+networks:
+  frontend:
+    driver: bridge
