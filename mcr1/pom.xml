@@ -24,6 +24,7 @@
 		<java.version>1.8</java.version>
         <docker.image.name>nowheresly/mcr1</docker.image.name>
         <docker.image.tag>latest</docker.image.tag>
+		<http.proxy>http://10.151.0.22:8080</http.proxy>
 	</properties>
 
 	<dependencies>
@@ -89,6 +90,22 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
+    <profiles>
+        <profile>
+            <id>proxy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <configuration>
+                            <buildArgs>
+                                <HTTP_PROXY>${http.proxy}</HTTP_PROXY>
+                            </buildArgs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
