@@ -13,11 +13,13 @@ services:
       - "traefik.backend=mcr1"
       - "traefik.port=8080"
       - "traefik.frontend.rule=PathPrefixStrip: /mcr1"
-      - "traefik.docker.network: frontend"
+      - "traefik.docker.network=frontend"
+      - "traefik.backend.loadbalancer.swarm=true"
     labels:
     - "traefik.backend=mcr1"
+    - "traefik.port=8080"
     - "traefik.frontend.rule=PathPrefixStrip: /mcr1"
-    - "traefik.docker.network: frontend"
+    - "traefik.docker.network=frontend"
 
   mcr2:
     image: nowheresly/mcr2:latest
@@ -31,11 +33,13 @@ services:
       - "traefik.backend=mcr2"
       - "traefik.port=8080"
       - "traefik.frontend.rule=PathPrefixStrip: /mcr2"
-      - "traefik.docker.network: frontend"
+      - "traefik.docker.network=frontend"
+      - "traefik.backend.loadbalancer.swarm=true"
     labels:
     - "traefik.backend=mcr2"
+    - "traefik.port=8080"
     - "traefik.frontend.rule=PathPrefixStrip: /mcr2"
-    - "traefik.docker.network: frontend"
+    - "traefik.docker.network=frontend"
 
   mcr3:
     image: nowheresly/mcr3:latest
@@ -49,15 +53,17 @@ services:
       - "traefik.backend=mcr3"
       - "traefik.port=8080"
       - "traefik.frontend.rule=PathPrefixStrip: /mcr3"
-      - "traefik.docker.network: frontend"
+      - "traefik.docker.network=frontend"
+      - "traefik.backend.loadbalancer.swarm=true"
     labels:
     - "traefik.backend=mcr3"
+    - "traefik.port=8080"
     - "traefik.frontend.rule=PathPrefixStrip: /mcr3"
-    - "traefik.docker.network: frontend"
+    - "traefik.docker.network=frontend"
 
   traefik:
-    image: traefik
-    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG --docker.swarmmode --docker.watch
+    image: traefik:1.4.3
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG --docker.swarmmode=true --docker.watch
     hostname: traefik
     ports:
     - "8080:8080/tcp"
@@ -68,10 +74,10 @@ services:
     deploy:
       labels:
       - "traefik.enable=false"
-      - "traefik.docker.network: frontend"
+      - "traefik.docker.network=frontend"
     labels:
     - "traefik.enable=false"
-    - "traefik.docker.network: frontend"
+    - "traefik.docker.network=frontend"
     networks:
     - frontend
 
