@@ -1,3 +1,7 @@
+# Microservices proof-of-concept
+
+A microserice sample using spring boot, docker, traefik, ELK...
+
 # Pipeline-As-Code using Jenkins with Microservices
 
 ## Context
@@ -33,7 +37,47 @@ Start the compose file:
 
 `docker-scripts/docker-compose up`
 
+Or better, use swarm:
+
+`docker swarm init`
+
+`docker stack deploy -c ./docker-scripts/docker-compose.yml mcr`
+
 Test it :
 - [http://localhost:80/mcr1/health](http://localhost:80/mcr1/health)
 - [http://localhost:80/mcr2/health](http://localhost:80/mcr2/health)
 - [http://localhost:80/mcr3/health](http://localhost:80/mcr3/health)
+
+# Logging
+In order to activate logging in an ELK stack, you need to deploy `docker-compose-logging.yml` in a docker stack.
+Follow the steps below:
+
+## How to create your swarm?
+Run this command: 
+
+`docker swarm init`
+
+## How to create logstash config?
+Run this command: 
+
+`docker config create logstash.conf ./etc/logstash.conf`
+
+## How to create the log network?
+Run this command: 
+
+`docker network create -d overlay log`
+
+## How to deploy the logging stack?
+Run this command: 
+
+`docker stack deploy -c ./docker-scripts/docker-compose-logging.yml log`
+
+A new stack named `log` is created.
+
+## How to remove the logging stack?
+Run this command: 
+
+`docker stack rm log`
+
+The stack named `log` is removed.
+

@@ -1,0 +1,100 @@
+version: '3.3'
+
+services:
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.0.0
+    hostname: 'elastic'
+    environment:
+    - xpack.security.enabled=false
+    ports:
+    - "9200:9200/tcp"
+    networks:
+    - log
+    volumes:
+    - elastic-data:/usr/share/elasticsearch/data
+    deploy:
+      labels:
+      - "traefik.enable=false"
+      resources:
+        reservations:
+          memory: 1000M
+        limits:
+          memory: 2000M
+      placement:
+        constraints: [node.role == manager]
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.0.0
+    environment:
+    - xpack.security.enabled=false
+    - LOGSPOUT=ignore
+    deploy:
+      labels:
+      - "traefik.enable=false"
+      resources:
+        reservations:
+          memory: 20M
+        limits:
+          memory: 400M
+      placement:
+        constraints: [node.role == manager]
+    configs:
+    - source: logstash.conf
+      target: /usr/share/logstash/pipeline/logstash.conf
+      uid: '1000'
+      gid: '1000'
+      mode: 0664
+    command: logstash -f /usr/share/logstash/pipeline/logstash.conf
+    networks:
+    - log
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.0.0
+    environment:
+    - xpack.security.enabled=false
+    - ELASTICSEARCH_URL=http://elastic:9200
+    deploy:
+      labels:
+      - "traefik.enable=false"
+      resources:
+        reservations:
+          memory: 300M
+        limits:
+          memory: 500M
+      placement:
+        constraints: [node.role == manager]
+    ports:
+    - "5601:5601/tcp"
+    networks:
+    - log
+
+  logspout:
+    image: gliderlabs/logspout:v3.2.3
+    environment:
+    - SYSLOG_FORMAT=rfc3164
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    command: syslog://logstash:51415
+    deploy:
+      labels:
+      - "traefik.enable=false"
+      mode: global
+      resources:
+        reservations:
+          memory: 20M
+        limits:
+          memory: 30M
+    networks:
+    - log
+
+volumes:
+  elastic-data:
+    external: true
+
+networks:
+  log:
+    external: true
+
+configs:
+  logstash.conf:
+    external: true

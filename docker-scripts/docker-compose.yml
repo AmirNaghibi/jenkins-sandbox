@@ -8,6 +8,12 @@ services:
     - "8010:8080/tcp"
     networks:
     - frontend
+    deploy:
+      labels:
+      - "traefik.backend=mcr1"
+      - "traefik.port=8080"
+      - "traefik.frontend.rule=PathPrefixStrip: /mcr1"
+      - "traefik.docker.network: frontend"
     labels:
     - "traefik.backend=mcr1"
     - "traefik.frontend.rule=PathPrefixStrip: /mcr1"
@@ -20,6 +26,12 @@ services:
     - "8020:8080/tcp"
     networks:
     - frontend
+    deploy:
+      labels:
+      - "traefik.backend=mcr2"
+      - "traefik.port=8080"
+      - "traefik.frontend.rule=PathPrefixStrip: /mcr2"
+      - "traefik.docker.network: frontend"
     labels:
     - "traefik.backend=mcr2"
     - "traefik.frontend.rule=PathPrefixStrip: /mcr2"
@@ -32,6 +44,12 @@ services:
     - "8030:8080/tcp"
     networks:
     - frontend
+    deploy:
+      labels:
+      - "traefik.backend=mcr3"
+      - "traefik.port=8080"
+      - "traefik.frontend.rule=PathPrefixStrip: /mcr3"
+      - "traefik.docker.network: frontend"
     labels:
     - "traefik.backend=mcr3"
     - "traefik.frontend.rule=PathPrefixStrip: /mcr3"
@@ -39,7 +57,7 @@ services:
 
   traefik:
     image: traefik
-    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG --docker.swarmmode --docker.watch
     hostname: traefik
     ports:
     - "8080:8080/tcp"
@@ -47,11 +65,16 @@ services:
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - /dev/null:/traefik.toml
+    deploy:
+      labels:
+      - "traefik.enable=false"
+      - "traefik.docker.network: frontend"
     labels:
     - "traefik.enable=false"
+    - "traefik.docker.network: frontend"
     networks:
     - frontend
 
 networks:
   frontend:
-    driver: bridge
+    driver: overlay
