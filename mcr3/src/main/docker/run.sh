@@ -2,4 +2,4 @@
 echo "********************************************************"
 echo "Starting MCR3"
 echo "********************************************************"
-java -Djava.security.egd=file:/dev/./urandom -jar /usr/local/mcr3/mcr3.jar
+exec java -Djava.security.egd=file:/dev/./urandom -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -jar /usr/local/mcr3/mcr3.jar
