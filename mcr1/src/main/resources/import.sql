@@ -1,0 +1,17 @@
+INSERT INTO USER (name, dept) VALUES ('edmond', 'HR');
+INSERT INTO USER (name, dept) VALUES ('barbara', 'HR');
+INSERT INTO USER (name, dept) VALUES ('leon', 'IT');
+INSERT INTO USER (name, dept) VALUES ('samantha', 'IT');
+INSERT INTO USER (name, dept) VALUES ('alice', 'CEO');
+INSERT INTO USER (name, dept) VALUES ('hector', 'marketing');
+INSERT INTO USER (name, dept) VALUES ('steve', 'marketing');
+INSERT INTO USER (name, dept) VALUES ('julia', 'marketing');
+INSERT INTO USER (name, dept) VALUES ('jo', 'delivery');
+INSERT INTO USER (name, dept) VALUES ('justin', 'delivery');
+INSERT INTO USER (name, dept) VALUES ('paul', 'product dev');
+INSERT INTO USER (name, dept) VALUES ('martin', 'product dev');
+INSERT INTO USER (name, dept) VALUES ('taylor', 'product dev');
+INSERT INTO USER (name, dept) VALUES ('georgia', 'legal');
+INSERT INTO USER (name, dept) VALUES ('sofia', 'legal');
+INSERT INTO USER (name, dept) VALUES ('vanessa', 'accounting');
+INSERT INTO USER (name, dept) VALUES ('john', 'accounting');
