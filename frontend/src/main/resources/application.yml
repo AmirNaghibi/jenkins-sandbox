@@ -1,0 +1,13 @@
+server:
+  contextPath: /
+  port: 8080
+
+spring:
+  application:
+    name: frontend
+  freemarker:
+    charset: UTF-8
+
+
+application:
+  apiUrl: http://127.0.0.1:8080
