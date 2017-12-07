@@ -1,8 +1,8 @@
 import api from '../api';
 
-export function fetchUsers(page, size) {
+export function fetchUsers(page=0, size=10, filter= []) {
 
-    return dispatch => api.mcr1.fetchUsers(page, size).then((resp) => {
+    return dispatch => api.mcr1.fetchUsers(page, size, filter).then((resp) => {
         dispatch({
             type: 'users/page',
             payload: {
@@ -12,4 +12,11 @@ export function fetchUsers(page, size) {
         });
     });
 
+}
+
+export function setUsersFilter(filter= []) {
+    return {
+        type: 'users/filter',
+        payload: filter
+    };
 }

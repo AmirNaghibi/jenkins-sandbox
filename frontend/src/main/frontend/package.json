@@ -6,10 +6,12 @@
     "axios": "^0.17.1",
     "lodash": "^4.17.4",
     "react": "^16.2.0",
+    "react-bootstrap": "^0.31.5",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-scripts": "1.0.17",
     "react-table": "^6.7.4",
+    "react-widgets": "^4.1.1",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0"
   },

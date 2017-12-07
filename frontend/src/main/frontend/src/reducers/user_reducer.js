@@ -5,7 +5,8 @@ const initialState = {
         size: 10,
         first: true,
         last: true
-    }
+    },
+    filter: []
 };
 
 export default function (state = initialState, action) {
@@ -15,6 +16,11 @@ export default function (state = initialState, action) {
                 ...state,
                 loading: false,
                 page: action.payload.page
+            };
+        case 'users/filter':
+            return {
+                ...state,
+                filter: action.payload || []
             };
     }
     return state;

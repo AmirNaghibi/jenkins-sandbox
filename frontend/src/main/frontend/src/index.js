@@ -8,6 +8,7 @@ import {applyMiddleware, createStore} from 'redux';
 import reducers from './reducers';
 import thunk from 'redux-thunk';
 import 'react-table/react-table.css';
+import 'react-widgets/dist/css/react-widgets.css';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 export const store = createStoreWithMiddleware(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
