@@ -1,6 +1,27 @@
 version: '3.3'
 
 services:
+  keycloak:
+    image: jboss/keycloak:3.4.1.Final
+    hostname: keycloak
+    ports:
+    - "9191:8080/tcp"
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: password
+      POSTGRES_DATABASE: keycloak
+      POSTGRES_USER: ukeycloak
+      POSTGRES_PASSWORD: password
+      POSTGRES_PORT_5432_TCP_ADDR: pgdb
+    networks:
+    - frontend
+    labels:
+    - "traefik.backend=keycloak"
+    - "traefik.port=8080"
+    - "traefik.frontend.rule=PathPrefix: /auth"
+    - "traefik.docker.network: frontend"
+
+
   mcr1:
     image: nowheresly/mcr1:latest
     hostname: 'mcr1'
@@ -61,8 +82,20 @@ services:
     - "traefik.frontend.rule=PathPrefixStrip: /mcr3"
     - "traefik.docker.network=frontend"
 
+  pgdb:
+    image: postgres:10.1
+    hostname: 'pgdb'
+    ports:
+    - 5432:5432/tcp
+    environment:
+    - POSTGRES_PASSWORD=password
+    volumes:
+    - pg-db-volume:/var/lib/postgresql/data
+    networks:
+    - frontend
+
   traefik:
-    image: traefik:1.4.3
+    image: traefik:1.4.4
     command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG --docker.swarmmode=true --docker.watch
     hostname: traefik
     ports:
@@ -84,3 +117,8 @@ services:
 networks:
   frontend:
     driver: overlay
+
+volumes:
+  pg-db-volume:
+    driver: local
+

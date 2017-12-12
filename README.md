@@ -48,6 +48,14 @@ Test it :
 - [http://localhost:80/mcr2/health](http://localhost:80/mcr2/health)
 - [http://localhost:80/mcr3/health](http://localhost:80/mcr3/health)
 
+# Keycloak
+run the following commands to create the keycloak user and db:
+
+`createuser -c 20 -D -E -l -S -R -i -h localhost -p 5432 -U postgres -W ukeycloak -P`
+
+`createdb -h localhost -p 5432 -U postgres -W -O ukeycloak -E utf-8 keycloak`
+
+
 # Logging
 In order to activate logging in an ELK stack, you need to deploy `docker-compose-logging.yml` in a docker stack.
 Follow the steps below:
