@@ -1,6 +1,27 @@
 version: '3.3'
 
 services:
+  front:
+    image: nowheresly/frontend:latest
+    hostname: 'front'
+    ports:
+    - "8000:8080/tcp"
+    networks:
+    - frontend
+    deploy:
+      labels:
+      - "traefik.backend=front"
+      - "traefik.port=8080"
+      - "traefik.frontend.rule=PathPrefix: /front"
+      - "traefik.docker.network=mcr_frontend"
+      - "traefik.backend.loadbalancer.swarm=true"
+    labels:
+    - "traefik.backend=front"
+    - "traefik.port=8080"
+    - "traefik.frontend.rule=PathPrefix: /front"
+    - "traefik.docker.network=frontend"
+
+
   keycloak:
     image: jboss/keycloak:3.4.1.Final
     hostname: keycloak
@@ -15,11 +36,17 @@ services:
       POSTGRES_PORT_5432_TCP_ADDR: pgdb
     networks:
     - frontend
+    deploy:
+      labels:
+      - "traefik.backend=keycloak"
+      - "traefik.port=8080"
+      - "traefik.frontend.rule=PathPrefix: /auth"
+      - "traefik.docker.network=mcr_frontend"
     labels:
     - "traefik.backend=keycloak"
     - "traefik.port=8080"
     - "traefik.frontend.rule=PathPrefix: /auth"
-    - "traefik.docker.network: frontend"
+    - "traefik.docker.network=frontend"
 
 
   mcr1:
@@ -33,13 +60,13 @@ services:
       labels:
       - "traefik.backend=mcr1"
       - "traefik.port=8080"
-      - "traefik.frontend.rule=PathPrefixStrip: /mcr1"
-      - "traefik.docker.network=frontend"
+      - "traefik.frontend.rule=PathPrefix: /mcr1"
+      - "traefik.docker.network=mcr_frontend"
       - "traefik.backend.loadbalancer.swarm=true"
     labels:
     - "traefik.backend=mcr1"
     - "traefik.port=8080"
-    - "traefik.frontend.rule=PathPrefixStrip: /mcr1"
+    - "traefik.frontend.rule=PathPrefix: /mcr1"
     - "traefik.docker.network=frontend"
 
   mcr2:
@@ -53,13 +80,13 @@ services:
       labels:
       - "traefik.backend=mcr2"
       - "traefik.port=8080"
-      - "traefik.frontend.rule=PathPrefixStrip: /mcr2"
-      - "traefik.docker.network=frontend"
+      - "traefik.frontend.rule=PathPrefix: /mcr2"
+      - "traefik.docker.network=mcr_frontend"
       - "traefik.backend.loadbalancer.swarm=true"
     labels:
     - "traefik.backend=mcr2"
     - "traefik.port=8080"
-    - "traefik.frontend.rule=PathPrefixStrip: /mcr2"
+    - "traefik.frontend.rule=PathPrefix: /mcr2"
     - "traefik.docker.network=frontend"
 
   mcr3:
@@ -73,13 +100,13 @@ services:
       labels:
       - "traefik.backend=mcr3"
       - "traefik.port=8080"
-      - "traefik.frontend.rule=PathPrefixStrip: /mcr3"
-      - "traefik.docker.network=frontend"
+      - "traefik.frontend.rule=PathPrefix: /mcr3"
+      - "traefik.docker.network=mcr_frontend"
       - "traefik.backend.loadbalancer.swarm=true"
     labels:
     - "traefik.backend=mcr3"
     - "traefik.port=8080"
-    - "traefik.frontend.rule=PathPrefixStrip: /mcr3"
+    - "traefik.frontend.rule=PathPrefix: /mcr3"
     - "traefik.docker.network=frontend"
 
   pgdb:
@@ -107,7 +134,7 @@ services:
     deploy:
       labels:
       - "traefik.enable=false"
-      - "traefik.docker.network=frontend"
+      - "traefik.docker.network=mcr_frontend"
     labels:
     - "traefik.enable=false"
     - "traefik.docker.network=frontend"
