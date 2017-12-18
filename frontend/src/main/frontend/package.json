@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.17.1",
+    "keycloak-js": "^3.4.1",
     "lodash": "^4.17.4",
     "react": "^16.2.0",
     "react-bootstrap": "^0.31.5",
@@ -24,6 +25,10 @@
   "proxy": {
     "/mcr1": {
       "target": "http://localhost:8080/",
+      "ws": true
+    },
+    "/auth": {
+      "target": "http://localhost:19191/",
       "ws": true
     }
   }
