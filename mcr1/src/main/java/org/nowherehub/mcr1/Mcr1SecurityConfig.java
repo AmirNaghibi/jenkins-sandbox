@@ -1,18 +1,12 @@
 package org.nowherehub.mcr1;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
-import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
-
-import java.util.*;
-import java.util.stream.Collectors;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 
 @Configuration
 public class Mcr1SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -35,42 +29,59 @@ public class Mcr1SecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest()
                 .authenticated()
             .and()
-            .oauth2Login() //
-                .authorizationEndpoint() //
-                .and() //
-                .userInfoEndpoint()
-                    .userAuthoritiesMapper(this.userAuthoritiesMapper())
+                //.addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class)
+                .addFilterBefore(keycloakAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
+                //.addFilterBefore(keycloakAuthenticatedActionsFilter(), BasicAuthenticationFilter.class)
+                //.addFilterAfter(keycloakSecurityContextRequestFilter(), SecurityContextHolderAwareRequestFilter.class)
+                .exceptionHandling()
+//            .and()
+//            .oauth2Login() //
+//                .authorizationEndpoint() //
+//                .and() //
+//                .userInfoEndpoint()
+//                    .userAuthoritiesMapper(this.userAuthoritiesMapper())
         ;
         // @formatter:on
     }
 
-    private GrantedAuthoritiesMapper userAuthoritiesMapper() {
-        return (authorities) -> {
-            Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
 
-            authorities.forEach(authority -> {
-                if (OidcUserAuthority.class.isInstance(authority)) {
-                    OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
 
-                    OidcIdToken idToken = oidcUserAuthority.getIdToken();
-                    OidcUserInfo userInfo = oidcUserAuthority.getUserInfo();
-
-                    // Map the claims found in idToken and/or userInfo
-                    // to one or more GrantedAuthority's and add it to mappedAuthorities
-                    Optional.ofNullable(idToken).ifPresent(token-> {
-                        List<String> roles = (List<String>) token.getClaims().getOrDefault("authorities", new ArrayList<>(0));
-                        mappedAuthorities.addAll(roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-                    });
-                } else if (OAuth2UserAuthority.class.isInstance(authority)) {
-                    OAuth2UserAuthority oauth2UserAuthority = (OAuth2UserAuthority) authority;
-
-                    List<String> clientRoles = (List<String>) oauth2UserAuthority.getAttributes().getOrDefault("authorities", new ArrayList<String>());
-                    mappedAuthorities.addAll(clientRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-                }
-            });
-
-            return mappedAuthorities;
-        };
+    @Bean
+    protected KeycloakAuthenticationProcessingFilter keycloakAuthenticationProcessingFilter() throws Exception {
+        KeycloakAuthenticationProcessingFilter filter = new KeycloakAuthenticationProcessingFilter(authenticationManagerBean());
+        return filter;
     }
+
+
+
+
+//    private GrantedAuthoritiesMapper userAuthoritiesMapper() {
+//        return (authorities) -> {
+//            Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
+//
+//            authorities.forEach(authority -> {
+//                if (OidcUserAuthority.class.isInstance(authority)) {
+//                    OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
+//
+//                    OidcIdToken idToken = oidcUserAuthority.getIdToken();
+//                    OidcUserInfo userInfo = oidcUserAuthority.getUserInfo();
+//
+//                    // Map the claims found in idToken and/or userInfo
+//                    // to one or more GrantedAuthority's and add it to mappedAuthorities
+//                    Optional.ofNullable(idToken).ifPresent(token-> {
+//                        List<String> roles = (List<String>) token.getClaims().getOrDefault("authorities", new ArrayList<>(0));
+//                        mappedAuthorities.addAll(roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+//                    });
+//                } else if (OAuth2UserAuthority.class.isInstance(authority)) {
+//                    OAuth2UserAuthority oauth2UserAuthority = (OAuth2UserAuthority) authority;
+//
+//                    List<String> clientRoles = (List<String>) oauth2UserAuthority.getAttributes().getOrDefault("authorities", new ArrayList<String>());
+//                    mappedAuthorities.addAll(clientRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+//                }
+//            });
+//
+//            return mappedAuthorities;
+//        };
+//    }
 
 }

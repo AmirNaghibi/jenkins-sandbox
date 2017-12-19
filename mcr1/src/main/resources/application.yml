@@ -1,26 +1,31 @@
 spring:
   application.name: mcr1
-  security:
-    oauth2:
-      client:
-        registration:
-          keycloak:
-            client-id: mcr1
-            client-secret: 1bed8692-7813-4ac1-ba95-8fd993eb0180
-            clientName: mcr1
-            authorizationGrantType: authorization_code
-            redirectUriTemplate: http://127.0.0.1:${server.port}/mcr1/login/oauth2/code/keycloak
-            scope: openid
-        provider:
-          keycloak:
-            authorization-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/auth
-            token-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/token
-            user-info-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/userinfo
-            user-name-attribute: sub
-            jwk-set-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/certs
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          keycloak:
+#            client-id: mcr1
+#            client-secret: 1bed8692-7813-4ac1-ba95-8fd993eb0180
+#            clientName: mcr1
+#            authorizationGrantType: authorization_code
+#            redirectUriTemplate: http://127.0.0.1:${server.port}/mcr1/login/oauth2/code/keycloak
+#            scope: openid
+#        provider:
+#          keycloak:
+#            authorization-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/auth
+#            token-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/token
+#            user-info-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/userinfo
+#            user-name-attribute: sub
+#            jwk-set-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/certs
 
 server:
   servlet.context-path: /mcr1
   port: 8080
 
-keycloak.server: 127.0.0.1:19191
+keycloak:
+  server: 127.0.0.1:19191
+  authorization-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/auth
+  token-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/token
+  user-info-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/userinfo
+  jwk-set-uri: http://${keycloak.server}/auth/realms/master/protocol/openid-connect/certs
